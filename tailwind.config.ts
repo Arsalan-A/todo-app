@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import lineClamp from '@tailwindcss/line-clamp';
 
 export default {
   content: [
@@ -13,10 +14,11 @@ export default {
         secondary: 'var(--secondary-color)',
         background: 'var(--background-color)',
         foreground: 'var(--foreground-color)',
+        accent: 'var(--accent-color)',
         primaryText: 'var(--primary-text-color)',
         secondaryText: 'var(--secondary-text-color)',
       },
     },
   },
-  plugins: [],
+  plugins: [lineClamp],
 } satisfies Config;

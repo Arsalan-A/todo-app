@@ -1,11 +1,15 @@
 import clipboard from '@/assets/clipboard.svg';
 import Image from 'next/image';
+import TaskCard from './TaskCard';
 
 const tasks = [
   { id: 1, title: 'Task 1', color: 'blue', completed: false },
   { id: 2, title: 'Task 2', color: 'red', completed: false },
   { id: 3, title: 'Task 3', color: 'green', completed: true },
 ];
+
+const tasksCount = tasks.length;
+const completedTasksCount = tasks.filter((task) => task.completed).length;
 
 const TaskList = () => {
   return (
@@ -20,14 +24,19 @@ const TaskList = () => {
         <div className='flex items-center gap-3'>
           <p className='text-secondaryText'>Completed</p>
           <span className='bg-gray-600 text-sm px-2 rounded-xl py-0'>
-            {tasks.filter((task) => task.completed).length}
+            {completedTasksCount > 0 ? (
+              <span>
+                {completedTasksCount} of {tasksCount}
+              </span>
+            ) : (
+              0
+            )}
           </span>
         </div>
       </div>
-      <hr className='my-3 border-gray-600' />
 
-      {tasks.length === 3 ? (
-        <div className='flex flex-col gap-3 items-center justify-center pt-10 text-gray-500'>
+      {tasks.length === 0 ? (
+        <div className='flex flex-col gap-3 my-6 items-center justify-center pt-10 text-gray-500'>
           <Image
             src={clipboard}
             alt='clipboard'
@@ -39,19 +48,9 @@ const TaskList = () => {
           <p>Create tasks and organize your to-do items</p>
         </div>
       ) : (
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 my-6'>
           {tasks.map((task) => (
-            <div
-              key={task.id}
-              className={`flex items-center justify-between bg-${task.color}-500 text-white font-bold rounded-md p-3`}
-            >
-              <p>{task.title}</p>
-              <span
-                className={`bg-${task.color}-600 text-sm px-2 rounded-xl py-0`}
-              >
-                {task.completed ? 'Completed' : 'Pending'}
-              </span>
-            </div>
+            <TaskCard key={task.id} task={task} />
           ))}
         </div>
       )}
