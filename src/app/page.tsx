@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import Wrapper from './components/Wrapper';
+import Wrapper from '@/components/Wrapper';
 import plusIcon from '@/assets/plus.svg';
-import TaskList from './components/TaskList';
+import TaskList from '@/components/TaskList';
 
 export default function Home() {
   return (
@@ -22,11 +22,11 @@ export default function Home() {
             transform
             -translate-x-1/2
             -translate-y-1/2
-            bg-primary
+            bg-primary-custom
             text-white
             font-semibold
             py-3
-            rounded-md
+            rounded-lg
             shadow-md
             hover:bg-[#175c84]
             transition-colors

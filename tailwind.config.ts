@@ -12,25 +12,29 @@ export default {
   theme: {
     extend: {
       colors: {
-        // primary: {
-        //   DEFAULT: 'hsl(var(--primary))',
-        //   foreground: 'hsl(var(--primary-foreground))',
-        // },
-        // secondary: {
-        //   DEFAULT: 'hsl(var(--secondary))',
-        //   foreground: 'hsl(var(--secondary-foreground))',
-        // },
-        // background: 'hsl(var(--background))',
-        // foreground: 'hsl(var(--foreground))',
-        // accent: {
-        //   DEFAULT: 'hsl(var(--accent))',
-        //   foreground: 'hsl(var(--accent-foreground))',
-        // },
-        primary: 'var(--primary-color)',
-        secondary: 'var(--secondary-color)',
-        background: 'var(--background-color)',
-        foreground: 'var(--foreground-color)',
-        accent: 'var(--accent-color)',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+          custom: 'var(--primary-color)',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+          custom: 'var(--secondary-color)',
+        },
+        background: {
+          DEFAULT: 'hsl(var(--background))',
+          custom: 'var(--background-color)',
+        },
+        foreground: {
+          DEFAULT: 'hsl(var(--foreground))',
+          custom: 'var(--foreground-color)',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+          custom: 'var(--accent-color)',
+        },
         primaryText: 'var(--primary-text-color)',
         secondaryText: 'var(--secondary-text-color)',
         card: {
