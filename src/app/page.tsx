@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Wrapper from '@/components/Wrapper';
 import plusIcon from '@/assets/plus.svg';
 import TaskList from '@/components/TaskList';
+import Link from 'next/link';
 
 export default function Home() {
   return (
@@ -10,8 +11,9 @@ export default function Home() {
         className='w-[50%]
             max-w-[736px] relative mx-auto'
       >
-        <button
-          className='
+        <Link href='/task'>
+          <button
+            className='
             flex
             items-center
             justify-center
@@ -32,9 +34,12 @@ export default function Home() {
             transition-colors
             w-full
           '
-        >
-          Create Task <Image src={plusIcon} alt='plus' width={16} height={16} />
-        </button>
+          >
+            Create Task{' '}
+            <Image src={plusIcon} alt='plus' width={16} height={16} />
+          </button>
+        </Link>{' '}
+        .
         <TaskList />
       </div>
     </Wrapper>
