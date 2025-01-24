@@ -15,6 +15,9 @@ import {
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { updateTask, deleteTask } from '@/queries/taskQueries';
+import { toast } from 'sonner';
 
 interface TaskCardProps {
   task: Task;
@@ -28,15 +31,92 @@ export interface Task {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: updateTask,
+    onMutate: async (newTask) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite the optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // Snapshot the previous value
+      const previousTasks = queryClient.getQueryData(['tasks']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['tasks'], (old: Task[]) =>
+        old.map((task) => (task.id === newTask.id ? newTask : task))
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousTasks };
+    },
+    onSuccess: () => {
+      toast.success('Task has been updated');
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, newTask, context) => {
+      queryClient.setQueryData(['tasks'], context?.previousTasks);
+      toast.error('Something went wrong. Please try again');
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  const { mutate: deleteMutation } = useMutation({
+    mutationFn: deleteTask,
+    onMutate: async (deletedTaskId) => {
+      // Cancel any outgoing refetches
+      // (so they don't overwrite the optimistic update)
+      await queryClient.cancelQueries({ queryKey: ['tasks'] });
+
+      // Snapshot the previous value
+      const previousTasks = queryClient.getQueryData(['tasks']);
+
+      // Optimistically update to the new value
+      queryClient.setQueryData(['tasks'], (old: Task[]) =>
+        old.filter((task) => task.id !== deletedTaskId)
+      );
+
+      // Return a context object with the snapshotted value
+      return { previousTasks };
+    },
+    onSuccess: () => {
+      toast.success('Task has been deleted');
+    },
+    // If the mutation fails,
+    // use the context returned from onMutate to roll back
+    onError: (err, newTask, context) => {
+      queryClient.setQueryData(['tasks'], context?.previousTasks);
+      toast.error('Something went wrong. Please try again');
+    },
+    // Always refetch after error or success:
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
+    },
+  });
+
+  const handleUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const completed = e.target.checked;
+    mutate({ ...task, completed });
+  };
+
+  const handleDelete = () => {
+    deleteMutation(task.id);
+  };
+
   return (
     <div className='flex items-center justify-between gap-3 p-4 pt-3 bg-accent-custom h-[72px] rounded-lg text-white '>
-      <div className='flex items-start gap-3 w-full'>
+      <div className='flex items-center gap-3 w-full h-full'>
         <label className='flex items-center cursor-pointer relative mt-1'>
           <input
             id='task-checkbox'
             type='checkbox'
             checked={task.completed}
-            onChange={() => console.log('checked')}
+            onChange={handleUpdate}
             className='peer shrink-0 h-5 w-5 cursor-pointer transition-all appearance-none rounded-full bg-transparent shadow hover:shadow-md border-2 border-primary-custom checked:bg-secondary-custom checked:border-secondary-custom'
           />
           <span className='absolute text-white opacity-0 peer-checked:opacity-100 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
@@ -56,10 +136,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             </svg>
           </span>
         </label>
-        <Link href={`/task/${task.id}`} className='w-full'>
+
+        <Link
+          href={`/task/${task.id}`}
+          className={cn('w-full', { 'pointer-events-none ': task.completed })}
+          aria-disabled={task.completed}
+          tabIndex={task.completed ? -1 : 0}
+        >
           <p
             className={cn('line-clamp-2 w-full cursor-pointer', {
-              'line-through': task.completed,
+              'line-through text-zinc-500': task.completed,
             })}
           >
             {task.title}
@@ -68,10 +154,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
       </div>
       <AlertDialog>
         <AlertDialogTrigger asChild>
-          <button
-            className='self-start shrink-0 border-none bg-transparent hover:opacity-50 transition-opacity'
-            onClick={() => console.log('delete')}
-          >
+          <button className='self-start shrink-0 border-none bg-transparent hover:opacity-50 transition-opacity'>
             <Image src={trash} alt='trash' width={24} height={24} />
           </button>
         </AlertDialogTrigger>
@@ -85,7 +168,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction className='bg-primary-custom text-white hover:bg-primary-custom hover:opacity-80 transition-opacity'>
+            <AlertDialogAction
+              className='bg-primary-custom text-white hover:bg-primary-custom hover:opacity-80 transition-opacity'
+              onClick={handleDelete}
+            >
               Continue
             </AlertDialogAction>
           </AlertDialogFooter>

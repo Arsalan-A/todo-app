@@ -9,4 +9,5 @@ export const taskSchema = z.object({
   color: z.string().min(1, {
     message: 'Please select a color',
   }),
+  completed: z.boolean().default(false),
 });

@@ -11,9 +11,9 @@ export default function Home() {
         className='md:w-[50%] w-[80%]
             max-w-[736px] relative mx-auto'
       >
-        <Link href='/task'>
-          <button
-            className='
+        <Link
+          href='/task'
+          className='
             flex
             items-center
             justify-center
@@ -34,14 +34,12 @@ export default function Home() {
             transition-colors
             w-full
           '
-          >
-            Create Task{' '}
-            <Image src={plusIcon} alt='plus' width={16} height={16} />
-          </button>
+        >
+          Create Task <Image src={plusIcon} alt='plus' width={16} height={16} />
         </Link>{' '}
-        .
-        <TaskList />
       </div>
+
+      <TaskList />
     </Wrapper>
   );
 }

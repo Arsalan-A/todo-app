@@ -21,6 +21,8 @@ import { Input } from '@/components/ui/input';
 import Wrapper from '@/components/Wrapper';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
+import { Task } from './TaskCard';
+import { LoaderCircle } from 'lucide-react';
 
 const COLORS = [
   '#FF3B30',
@@ -33,26 +35,30 @@ const COLORS = [
   '#FF2D55',
   '#A2845E',
 ];
-import { Task } from './TaskCard';
 
 interface TaskForm {
   type: string;
   task?: Task | null;
   isSubmitLoading: boolean;
-  handleSubmit: (task: z.infer<typeof taskSchema>) => void;
+  handleSubmit: (values: z.infer<typeof taskSchema>) => void;
 }
 
 const TaskForm: React.FC<TaskForm> = ({
   type,
-  task,
+  task = {
+    title: '',
+    color: COLORS[0],
+    completed: false,
+  },
   isSubmitLoading,
   handleSubmit,
 }) => {
   const form = useForm<z.infer<typeof taskSchema>>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
-      title: task?.title ?? '',
-      color: task?.color ?? COLORS[0],
+      title: task?.title,
+      color: task?.color,
+      completed: task?.completed,
     },
   });
 
@@ -148,8 +154,14 @@ const TaskForm: React.FC<TaskForm> = ({
             w-full
           '
             >
-              {btnTitle}{' '}
-              <Image src={btnIcon} alt='plus' width={16} height={16} />
+              {isSubmitLoading ? (
+                <LoaderCircle className='animate-spin' />
+              ) : (
+                <>
+                  {btnTitle}{' '}
+                  <Image src={btnIcon} alt='plus' width={16} height={16} />
+                </>
+              )}
             </button>
           </form>
         </Form>
