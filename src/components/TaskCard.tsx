@@ -14,13 +14,14 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 interface TaskCardProps {
   task: Task;
 }
 
-interface Task {
-  id: number;
+export interface Task {
+  id: string;
   title: string;
   color: string;
   completed: boolean;
@@ -29,7 +30,7 @@ interface Task {
 const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
   return (
     <div className='flex items-center justify-between gap-3 p-4 pt-3 bg-accent-custom h-[72px] rounded-lg text-white '>
-      <div className='flex items-start gap-3'>
+      <div className='flex items-start gap-3 w-full'>
         <label className='flex items-center cursor-pointer relative mt-1'>
           <input
             id='task-checkbox'
@@ -55,14 +56,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ task }) => {
             </svg>
           </span>
         </label>
-
-        <p
-          className={cn('line-clamp-2', {
-            'line-through': task.completed,
-          })}
-        >
-          {task.title}
-        </p>
+        <Link href={`/task/${task.id}`} className='w-full'>
+          <p
+            className={cn('line-clamp-2 w-full cursor-pointer', {
+              'line-through': task.completed,
+            })}
+          >
+            {task.title}
+          </p>
+        </Link>
       </div>
       <AlertDialog>
         <AlertDialogTrigger asChild>

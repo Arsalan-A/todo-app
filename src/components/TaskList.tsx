@@ -2,10 +2,16 @@ import clipboard from '@/assets/clipboard.svg';
 import Image from 'next/image';
 import TaskCard from './TaskCard';
 
-const tasks = [
-  { id: 1, title: 'Task 1', color: 'blue', completed: false },
-  { id: 2, title: 'Task 2', color: 'red', completed: false },
-  { id: 3, title: 'Task 3', color: 'green', completed: true },
+export const tasks = [
+  {
+    id: '1',
+    title:
+      'Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis Lorem ipsum dolor sit amet consectetur adipisicing elit. Lorem ipsum dolor sit amet consectetur adipisicing elit. Alias reiciendis iure at natus perspiciatis! Ipsam voluptatem tempore, nobis saepe nostrum, odit corporis eaque debitis maiores, id dolorem.',
+    color: '#FF3B30',
+    completed: false,
+  },
+  { id: '2', title: 'Task 2', color: '#A2845E', completed: false },
+  { id: '3', title: 'Task 3', color: '#007AFF', completed: true },
 ];
 
 const tasksCount = tasks.length;
