@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <Wrapper>
       <div
-        className='w-[50%]
+        className='md:w-[50%] w-[80%]
             max-w-[736px] relative mx-auto'
       >
         <Link href='/task'>

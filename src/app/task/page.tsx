@@ -57,7 +57,7 @@ const Task = () => {
   return (
     <Wrapper>
       <div
-        className='w-[50%]
+        className='md:w-[50%] w-[80%]
             max-w-[736px] mx-auto pt-12'
       >
         <Link href='/'>
